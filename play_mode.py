@@ -5,8 +5,10 @@ import game_framework
 
 from boy import Boy
 from grass import Grass
-from bird import Bird
+from bird import Bird, FRAME_COUNT
 
+
+BIRD_COUNT = 10
 
 boy = None
 
@@ -34,8 +36,29 @@ def init():
     boy = Boy()
     game_world.add_oject(boy, 1)
 
-    bird = Bird(800, 400)
-    game_world.add_oject(bird, 1)
+    # 화면 가로 방향으로 새 10마리를 나누어 배치한다.
+    spacing = get_canvas_width() / (BIRD_COUNT + 1)
+
+    for i in range(BIRD_COUNT):
+        x = spacing * (i + 1)
+
+        # 세 가지 높이를 번갈아 사용한다.
+        y = 300 + (i % 3) * 100
+
+        # 오른쪽과 왼쪽 방향을 번갈아 지정한다.
+        direction = 1 if i % 2 == 0 else -1
+
+        # 날갯짓 시작 시점을 한 사이클 안에서 분산한다.
+        frame = i * FRAME_COUNT / BIRD_COUNT
+
+        bird = Bird(
+            x=x,
+            y=y,
+            direction=direction,
+            frame=frame
+        )
+
+        game_world.add_oject(bird, 1)
 
 
 def pause():
